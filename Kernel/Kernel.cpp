@@ -1,3 +1,7 @@
+//	MIT License
+//	Copyright (c) 2020 Archlisk
+//	Read "(Project Root)/LICENSE" for more information
+
 #include <Drivers/Terminal.h>
 #include <Drivers/VGA.h>
 
