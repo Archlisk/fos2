@@ -11,6 +11,7 @@ all:
 		echo No multiboot header found; \
 	fi
 	
+	-@mkdir Bin
 	@mkdir -p Bin/isodir/boot/grub
 	@cp Bin/Kernel.bin Bin/isodir/boot/
 	@cp Bin/grub.cfg Bin/isodir/boot/grub
