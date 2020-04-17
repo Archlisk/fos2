@@ -1,0 +1,14 @@
+DIRS_CLEAN = $(addsuffix .clean,$(DIRS))
+
+all: dirs
+
+dirs: $(DIRS)
+$(DIRS):
+	@flock $@ $(MAKE) -C $@
+
+clean: $(DIRS_CLEAN)
+$(DIRS_CLEAN): %.clean:
+	@flock $* $(MAKE) -C $* clean
+
+
+.PHONY: all clean $(DIRS) $(DIRS_CLEAN)

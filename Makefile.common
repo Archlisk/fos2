@@ -1,0 +1,59 @@
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+BASE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
+
+ifndef CXX
+CXX = g++
+endif
+ifndef ASM
+ASM = nasm
+endif
+ifndef LNK
+LNK = ld
+endif
+
+CPP_FLAGS +=
+ASM_FLAGS +=
+LNK_FLAGS +=
+
+INCLUDE_FLAGS = $(foreach path,$(INCLUDE_DIRS),\
+			-I$(BASE_DIR)/$(path))
+
+AUTO_INCLUDE_FLAGS = $(foreach path,$(AUTO_INCLUDE),\
+		     	-include $(BASE_DIR)/$(path))
+
+OBJECTS_CPP = $(patsubst %.cpp,%.o,$(SOURCES_CPP))
+OBJECTS_ASM = $(patsubst %.asm,%.o,$(SOURCES_ASM))
+OBJECTS = $(OBJECTS_CPP) $(OBJECTS_ASM)
+
+CPP_DEPS = $(patsubst %.o,%.d,$(OBJECTS_CPP))
+
+ifdef OUT
+OUT_PATH = $(BASE_DIR)/Bin/$(OUT)
+$(OUT_PATH): $(OBJECTS)
+	@echo Linking $(OUT)...
+	@$(LNK) $(LNK_FLAGS) -o $(OUT_PATH) $(OBJECTS)
+endif
+
+ifdef LIB
+OUT_PATH = $(BASE_DIR)/Bin/$(LIB)
+$(OUT_PATH): $(OBJECTS)
+	@echo Linking $(OUT)...
+	@$(LNK) $(LNK_FLAGS) -r -o $(OUT_PATH) $(OBJECTS)
+endif
+
+all: $(OUT_PATH)
+
+-include $(CPP_DEPS)
+
+%.o: %.cpp
+	@echo Compiling $<...
+	@$(CXX) $(CPP_FLAGS) $(INCLUDE_FLAGS) $(AUTO_INCLUDE_FLAGS) -MM -MT $@ -MF $(patsubst %.o,%.d,$@) $<
+	@$(CXX) $(CPP_FLAGS) $(INCLUDE_FLAGS) $(AUTO_INCLUDE_FLAGS) -o $@ -c $<
+
+%.o: %.asm
+	@echo Compiling $<...
+	@$(ASM) $(ASM_FLAGS) -o $@ $<
+
+.PHONY: clean
+clean:
+	rm $(OBJECTS) $(CPP_DEPS)
