@@ -1,7 +1,8 @@
 LIB = LibFCPP.a
 
 SOURCES_CPP = \
-	      Memory/copy.cpp
+	      Memory/copy.cpp \
+	      Heap/Heap.cpp
 
 INCLUDE_DIRS = \
 	       LibFCPP/Include

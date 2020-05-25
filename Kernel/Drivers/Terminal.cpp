@@ -41,7 +41,7 @@ char Terminal::write_char(char symbol) {
 	
 	if (m_position >= m_width * m_height) {
         FCPP::Memory::copy(m_data, (char*)m_data + m_width * 2, m_width * (m_height - 1) * 2);
-        FCPP::Memory::set((char*)m_data + m_width * 2 * (m_height - 1), 0, m_width * 2);
+        FCPP::Memory::set((char*)m_data + m_width * (m_height - 1) * 2, 0, m_width * 2);
         m_position -= m_width + m_position % m_width;
     }
 	

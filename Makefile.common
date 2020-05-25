@@ -1,19 +1,23 @@
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 BASE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 
+CROSSCOMP_PATH = $(BASE_DIR)/Tools/cross-bin/bin
+
 ifndef CXX
-CXX = g++
+CXX = $(CROSSCOMP_PATH)/i686-elf-g++
 endif
 ifndef ASM
 ASM = nasm
 endif
 ifndef LNK
-LNK = ld
+LNK = $(CROSSCOMP_PATH)/i686-elf-g++
 endif
 
-CPP_FLAGS +=
+CPP_FLAGS += -masm=intel
 ASM_FLAGS +=
 LNK_FLAGS +=
+
+LNK_LIBS += -lgcc
 
 INCLUDE_FLAGS = $(foreach path,$(INCLUDE_DIRS),\
 			-I$(BASE_DIR)/$(path))
@@ -31,14 +35,14 @@ ifdef OUT
 OUT_PATH = $(BASE_DIR)/Bin/$(OUT)
 $(OUT_PATH): $(OBJECTS)
 	@echo Linking $(OUT)...
-	@$(LNK) $(LNK_FLAGS) -o $(OUT_PATH) $(OBJECTS)
+	@$(LNK) $(LNK_FLAGS) -o $(OUT_PATH) $(OBJECTS) $(LNK_LIBS)
 endif
 
 ifdef LIB
 OUT_PATH = $(BASE_DIR)/Bin/$(LIB)
 $(OUT_PATH): $(OBJECTS)
 	@echo Linking $(OUT)...
-	@$(LNK) $(LNK_FLAGS) -r -o $(OUT_PATH) $(OBJECTS)
+	@$(LNK) $(LNK_FLAGS) -r -o $(OUT_PATH) $(OBJECTS) $(LNK_LIBS)
 endif
 
 all: $(OUT_PATH)

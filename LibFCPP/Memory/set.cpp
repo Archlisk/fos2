@@ -1,12 +1,8 @@
 #include <Memory.h>
 
-void* FCPP::Memory::set(void* dst, const u8 val, u32 bytes) {
-    void* start_dst = dst;
-    
-     u64 val64 = (u64)val << 56 | (u64)val << 48 | (u64)val << 40 | (u64)val << 32 | (u64)val << 24 | (u64)val << 16 | (u64)val << 8 | val;
-    
+void* FCPP::Memory::set(void* dst, u64 val, u32 bytes) {
     while (bytes >= sizeof(u64)) {
-        *(u64*)dst = val64;
+        *(u64*)dst = val;
         bytes -= sizeof(u64);
         dst += sizeof(u64);
     }
@@ -16,5 +12,5 @@ void* FCPP::Memory::set(void* dst, const u8 val, u32 bytes) {
         dst++;
     }
     
-    return start_dst;
+    return dst;
 }
