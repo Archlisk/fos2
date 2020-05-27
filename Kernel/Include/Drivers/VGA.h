@@ -1,7 +1,5 @@
 #pragma once
 
-#include <FCPPTypes.h>
-
 namespace VGA {
 
 enum class FGColor4B {

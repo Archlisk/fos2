@@ -50,3 +50,40 @@ SECTION .text
 		or eax, 0x80000001
 		mov cr0, eax
 		ret
+		
+	global load_idt_asm
+	load_idt_asm:
+		mov eax, [esp + 4]
+		mov [.idtr + 2], eax
+		mov ax, [esp + 8]
+		mov [.idtr], ax
+		lidt [.idtr]
+		
+		ret
+		
+		.idtr:
+			dw 0
+			dd 0
+	
+	global load_gdt_asm
+	load_gdt_asm:
+		mov eax, [esp + 4]
+		mov [.gdtr + 2], eax
+		mov ax, [esp + 8]
+		mov [.gdtr], ax
+		lgdt [.gdtr]
+		
+		jmp 0x08:.reload_segments
+		.reload_segments:
+			mov ax, 0x10
+			mov ds, ax
+			mov es, ax
+			mov fs, ax
+			mov gs, ax
+			mov ss, ax
+		
+		ret
+
+		.gdtr:
+			dw 0
+			dd 0

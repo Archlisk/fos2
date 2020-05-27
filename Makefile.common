@@ -60,4 +60,4 @@ all: $(OUT_PATH)
 
 .PHONY: clean
 clean:
-	rm $(OBJECTS) $(CPP_DEPS)
+	-rm $(OBJECTS) $(CPP_DEPS)

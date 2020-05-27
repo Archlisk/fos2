@@ -1,7 +1,5 @@
 #pragma once
 
-#include <FCPPTypes.h>
-
 #include <Drivers/VGA.h>
 
 class Terminal {

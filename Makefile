@@ -18,6 +18,9 @@ all:
 	@grub-mkrescue -o fos2.iso Bin/isodir
 
 run: all
-	@qemu-system-x86_64 -cdrom fos2.iso	
+	@qemu-system-i386 -cdrom fos2.iso -soundhw pcspk
+	
+clean:
+	-rm -rf Bin/isodir Bin/Kernel.bin
 
 include Makefile.dirs

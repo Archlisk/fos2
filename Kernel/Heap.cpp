@@ -81,29 +81,3 @@ void Heap::free(void* addr) {
 		header->next = header->next->next;
 	}
 }
-
-#include <Drivers/Terminal.h>
-
-#include <String.h>
-
-void Heap::print_headers(Terminal& tty) {
-	Header* c_header = (Header*)m_start_addr;
-	
-	while (!c_header->is_last) {
-		tty.write_str("0x");
-		tty.write_str(htoa((u64)c_header));
-		
-		tty.write_str(": prev=0x");
-		tty.write_str(htoa((u64)c_header->prev));
-		
-		tty.write_str(", free=");
-		tty.write_str(itoa((u64)c_header->free));
-		
-		tty.write_str(", next=0x");
-		tty.write_str(htoa((u64)c_header->next));
-		
-		tty.write_char('\n');
-		
-		c_header = c_header->next;
-	}
-}

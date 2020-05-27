@@ -1,7 +1,5 @@
 #pragma once
 
-#include <FCPPTypes.h>
-
 class Terminal;
 
 namespace Kernel {
@@ -12,8 +10,6 @@ public:
 
 	void* alloc(u32 size);
 	void free(void* addr);
-	
-	void print_headers(Terminal& tty);
 	
 	struct __attribute__((packed)) Header {
 		Header* next;
