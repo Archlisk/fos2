@@ -9,7 +9,7 @@ void Paging::enable(Paging::PageDir& pd) {
 	enable_paging_asm(pd);
 }
 
-void PageDir::identity_map() {
+void PageDir::identity_map_all() {
 	u32 current_addr = 0;
 
 	for (int i = 0; i < PAGE_ENTRIES; i++) {
@@ -25,6 +25,18 @@ void PageDir::identity_map() {
 void PageDir::unmap_all() {
 	for (int i = 0; i < PAGE_ENTRIES; i++)
 		*(u32*)&entries[i] = 0;
+}
+
+void* PageDir::identity_map(void* addr) {
+	u16 page_index = (u64)addr / PAGE_SIZE;
+	
+	*(u32*)&entries[page_index] = 0;
+	entries[page_index].addr = PAGE_ALIGN(addr);
+	entries[page_index].present = 1;
+	entries[page_index].writable = 1;
+	entries[page_index].huge = 1;
+	
+	return addr;
 }
 
 void* PageDir::map(void* phys_addr, void* virt_addr) {

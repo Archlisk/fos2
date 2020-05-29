@@ -1,4 +1,5 @@
 #include <Memory.h>
+#include <Math.h>
 
 // TODO: These funtions will be buggy if the distance between src and dst is less than 8 bytes
 
@@ -8,7 +9,7 @@ FORCE_INLINE void* copy_rev(void* dst, const void* src, u32 bytes) {
     dst += bytes - 1;
     src += bytes - 1;
     
-    u64 diff = 
+    u64 diff = (FC::max(dst, src) - FC::min(dst, src));
     
     while (bytes >= sizeof(u64)) {
         *(u64*)dst = *(u64*)src;
@@ -26,7 +27,7 @@ FORCE_INLINE void* copy_rev(void* dst, const void* src, u32 bytes) {
     return start_dst;
 }
 
-void* FCPP::Memory::copy(void* dst, const void* src, u32 bytes) {
+void* FC::Memory::copy(void* dst, const void* src, u32 bytes) {
 	if (dst > src && src < dst + bytes)
 		return copy_rev(dst, src, bytes);
 

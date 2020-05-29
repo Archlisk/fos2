@@ -5,14 +5,14 @@
 #define PAGE_ENTRIES 1024
 #define PAGE_SIZE 4194304
 
-#define PAGE_ALIGN(num) ((u64)num >> 11)
+#define PAGE_ALIGN(num) ((u32)num >> 22)
 
 namespace Kernel {
 namespace Paging {
 
-struct __attribute__((packed)) PageDir {
+struct PACKED PageDir {
 
-	struct __attribute__((packed)) Entry {
+	struct PACKED Entry {
 		u8 present : 1;
 		u8 writable : 1;
 		u8 user_access : 1;
@@ -20,13 +20,15 @@ struct __attribute__((packed)) PageDir {
 		u8 cache_disabled : 1;
 		u8 accessed : 1;
 		u8 : 1; // IGNORED
-		u8 huge : 1;
+		u8 huge : 1 = 1;
 		u8 : 3; // AVAILABLE
 		u32 addr : 21;
 	};
 	
-	void identity_map();
+	void identity_map_all();
 	void unmap_all();
+	
+	void* identity_map(void* addr);
 	
 	Entry entries[PAGE_ENTRIES];
 	

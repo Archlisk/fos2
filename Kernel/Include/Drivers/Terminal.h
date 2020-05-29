@@ -2,6 +2,8 @@
 
 #include <Drivers/VGA.h>
 
+namespace Kernel {
+
 class Terminal {
 public:
 	Terminal(u16* data, u16 width, u16 height)
@@ -25,3 +27,5 @@ private:
 
 	u8 m_color = 0x0F;
 };
+
+}

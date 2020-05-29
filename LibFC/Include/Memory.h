@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FCPP {
+namespace FC {
 
 namespace Memory {
 	u8 compare(const void* area1, const void* area2, u32 bytes);

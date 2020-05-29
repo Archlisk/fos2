@@ -10,9 +10,9 @@ namespace Kernel {
 
 struct IDT {
 
-	struct __attribute__((packed)) Entry {
+	struct PACKED Entry {
 		
-		struct __attribute__((packed)) Attributes {
+		struct PACKED Attributes {
 			Attributes() {}
 			
 			Attributes(u8 gate_type, u8 privilege) 

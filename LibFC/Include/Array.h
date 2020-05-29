@@ -1,6 +1,6 @@
 #pragma once
 
-namespace FCPP {
+namespace FC {
 
 template<typename T, u32 elements>
 class Array {

@@ -2,7 +2,7 @@
 
 #include <CString.h>
 
-namespace FCPP {
+namespace FC {
 
 class OStream {
 public:

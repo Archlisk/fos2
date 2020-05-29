@@ -5,9 +5,9 @@
 namespace Kernel {
 namespace GDT {
 
-	struct __attribute__((packed)) Entry {
+	struct PACKED Entry {
 	
-		struct __attribute__((packed)) AccessByte {
+		struct PACKED AccessByte {
 			AccessByte() {}
 			AccessByte(u8 data) { *(u8*)this = data; }
 		

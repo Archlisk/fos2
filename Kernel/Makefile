@@ -3,13 +3,9 @@ ARCH = x86
 OUT = Kernel.bin
 
 SOURCES_CPP += \
-	       ../LibFCPP/Memory/copy.cpp \
-	       ../LibFCPP/Memory/set.cpp \
-	       ../LibFCPP/Memory/alloc.cpp \
-	       ../LibFCPP/Memory/free.cpp \
-	       ../LibFCPP/Array.cpp \
-	       ../LibFCPP/Console.cpp \
-	       ../LibFCPP/String.cpp \
+	       ../LibFC/Memory/copy.cpp \
+	       ../LibFC/Memory/set.cpp \
+	       ../LibFC/Memory/compare.cpp \
 	       $(ARCH)/Kernel.cpp \
 	       $(ARCH)/Paging.cpp \
 	       $(ARCH)/Drivers/GDT.cpp \
@@ -19,6 +15,9 @@ SOURCES_CPP += \
 	       Drivers/PIT.cpp \
 	       Drivers/PIC.cpp \
 	       Drivers/Terminal.cpp \
+	       Drivers/ACPI.cpp \
+	       Drivers/PCI.cpp \
+	       Drivers/PCIList.cpp \
 	       Heap.cpp
 
 SOURCES_ASM += \
@@ -28,10 +27,10 @@ SOURCES_ASM += \
 INCLUDE_DIRS += \
 		Kernel/Include \
 		Kernel/$(ARCH)/Include \
-		LibFCPP/Include
+		LibFC/Include
 		
 AUTO_INCLUDE += \
-		LibFCPP/Include/FCPPTypes.h
+		LibFC/Include/FC.h
 
 ASM_FLAGS += -felf32
 CPP_FLAGS += -ffreestanding -fno-exceptions -fno-rtti -Wall -Wextra -Wno-pointer-arith -m32 -std=c++20 -D KERNEL

@@ -5,7 +5,7 @@
 
 #include <TTY.h>
 
-namespace FCPP {
+namespace FC {
 
 class String {
 public:

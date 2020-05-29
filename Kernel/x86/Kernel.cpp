@@ -8,18 +8,21 @@
 #include <Drivers/PIC.h>
 #include <Drivers/PIT.h>
 #include <Drivers/PCSpeaker.h>
+#include <Drivers/ACPI.h>
+#include <Drivers/PCI.h>
 
 #include <Paging.h>
 #include <Interrupts.h>
-#include <TTY.h>
+#include <CPUID.h>
 
 #include <String.h>
 #include <Memory.h>
+#include <Vector.h>
 
-#define HEAP_ADDR ((void*)(PAGE_SIZE))
+#define HEAP_ADDR ((void*)(PAGE_SIZE * 4))
 
 using namespace Kernel;
-using namespace FCPP;
+using namespace FC;
 
 extern "C" Paging::PageDir kernel_page_dir;
 
@@ -27,26 +30,40 @@ Terminal KernelData::tty(nullptr, 0, 0);
 Heap KernelData::heap(nullptr, 0);
 
 void kernel_main() {
-	out << VGA::FGColor4B::LightGreen << "Kernel entered\n" << VGA::FGColor4B::BrightWhite; 
-
-	while(true) {
-		PIT::sleep(985);
-		PCSpeaker::play(800);
-		PIT::sleep(15);
-		PCSpeaker::stop();
-	}
-
-	out << VGA::FGColor4B::LightRed << "Kernel exiting...\n";
+//	for (u16 bus = 0; bus < PCI_MAX_BUS; bus++)
+//		for (u8 device = 0; device < PCI_MAX_DEVICE; device++)
+//			for (u8 func = 0; func < PCI_MAX_FUNC; func++) {
+//				u16 res = PCI::read_w(bus, device, func, 0x00);
+//				if (res != 0xFFFF) {
+//					res = PCI::read_w(bus, device, func, 0x0A);
+//					out << "PCI " << bus << ":" << device << ":" << func << " 0x" << (void*)res << " '"
+//						<< PCI::class_str(res) << "'\n";
+//				}
+//			}
+	
+	Vector<String> vec;
+	vec.push(String("Fuck"));
+	vec.push(String(" Bit"));
+	vec.push(String("ch\n"));
+	vec.insert(1, String(" You"));
+	
+	for (String& str : vec)
+		out << str;
+	
+	KernelData::tty.set_color(VGA::FGColor4B::LightGreen);
+	out << "Initialization complete!\n";
+	KernelData::tty.set_color(VGA::FGColor4B::BrightWhite);
 }
 
 extern "C"
 void enter() {
 	KernelData::heap = Heap(HEAP_ADDR, PAGE_SIZE);
 	KernelData::tty = Terminal((u16*)0xB8000, 80, 25);
+	
+	KernelData::tty.set_color(VGA::FGColor4B::BrightWhite);
 
 	kernel_page_dir.unmap_all();	// Zero all entries to remove any garbage
-	kernel_page_dir.map(nullptr, nullptr);
-	kernel_page_dir.map(HEAP_ADDR, HEAP_ADDR);
+	kernel_page_dir.identity_map_all();
 	Paging::enable(kernel_page_dir);
 	
 	GDT::Entry gdt[3] = {
@@ -68,5 +85,10 @@ void enter() {
 	
 	PIT::set_frequency(PIT::Channel::C0, 1000);
 	
+	out << "CPU\t: " << CPU::brand_str() << '\n';
+	
+	ACPI acpi;
+	
 	kernel_main();
+	KernelData::heap.print_headers();
 }

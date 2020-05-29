@@ -4,6 +4,10 @@
 
 #define TERMINAL_TAB_SIZE 8
 
+using namespace Kernel;
+
+#include <Drivers/PIT.h>
+
 u32 Terminal::write_str(const char* str, u32 len) {
 	for (u32 i = 0; i < len; i++)
 		write_char(str[i]);
@@ -15,7 +19,7 @@ u32 Terminal::write_str(const char* str) {
 	u32 i = 0;
 	while (str[i] != 0)
 		write_char(str[i++]);
-
+	
 	return i;
 }
 
@@ -40,8 +44,8 @@ char Terminal::write_char(char symbol) {
 	}
 	
 	if (m_position >= m_width * m_height) {
-        FCPP::Memory::copy(m_data, (char*)m_data + m_width * 2, m_width * (m_height - 1) * 2);
-        FCPP::Memory::set((char*)m_data + m_width * (m_height - 1) * 2, 0, m_width * 2);
+        FC::Memory::copy(m_data, (char*)m_data + m_width * 2, m_width * (m_height - 1) * 2);
+        FC::Memory::set((char*)m_data + m_width * (m_height - 1) * 2, 0, m_width * 2);
         m_position -= m_width + m_position % m_width;
     }
 	
