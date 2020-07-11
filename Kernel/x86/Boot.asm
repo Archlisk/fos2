@@ -87,3 +87,14 @@ SECTION .text
 		.gdtr:
 			dw 0
 			dd 0
+	
+	global enable_sse
+	enable_sse:
+		mov eax, cr0
+		and ax, 0xFFFB		; Clear CR0.EM
+		or ax, 0x2			; Set CR0.MP
+		mov cr0, eax
+		mov eax, cr4
+		or ax, 3 << 9		; Set CR4.OSFXSR and CR4.OSXMMEXCPT
+		mov cr4, eax
+		ret

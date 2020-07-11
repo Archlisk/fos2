@@ -18,6 +18,7 @@ SOURCES_CPP += \
 	       Drivers/ACPI.cpp \
 	       Drivers/PCI.cpp \
 	       Drivers/PCIList.cpp \
+	       Drivers/IDE.cpp \
 	       Heap.cpp
 
 SOURCES_ASM += \

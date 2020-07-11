@@ -67,13 +67,13 @@ void* Heap::alloc(u32 bytes) {
 }
 
 void* Heap::realloc(void* addr, u32 bytes) {
-	if (!addr)
-		return alloc(bytes);
-	
 	if (!bytes) {
 		free(addr);
 		return nullptr;
 	}
+
+	if (!addr)
+		return alloc(bytes);
 	
 	Header* header = (Header*)((u64)addr - sizeof(Header));
 	u32 alloc_size = (u64)header->next - (u64)header - sizeof(Header);
@@ -86,6 +86,7 @@ void* Heap::realloc(void* addr, u32 bytes) {
 		free(addr);
 		return new_addr;
 	}
+	
 	if (bytes < alloc_size) {
 		void* new_addr = alloc(bytes);
 		FC::Memory::copy(new_addr, addr, bytes);
@@ -104,29 +105,60 @@ void Heap::free(void* addr) {
 	
 	header->free = true;
 	
-	if ((!header->first) && header->prev->free) {
-		header->prev->next = header->next;
-		header->next->prev = header->prev;
-		
-		header = header->prev;
+	if (!header->first && header->prev->free)
+		erase_header(header);
+	
+	if (!header->next->last && header->next->free)
+		erase_header(header->next);
+	
+//	if (check_corruption()) {
+//		out << "HEAP CORRUPTED!\n";
+//		print_headers();
+//		while (true) {}
+//	}
+}
+
+bool Heap::check_corruption() {
+	Header* c_header = (Header*)m_start_addr;
+	
+	Header* next_header_ptr = nullptr;
+	Header* prev_header_ptr = nullptr;
+	
+	while (!c_header->last) {
+		if (next_header_ptr != c_header && next_header_ptr)
+			return true;
+		if (prev_header_ptr != c_header->prev && prev_header_ptr)
+			return true;
+	
+		next_header_ptr = c_header->next;
+		prev_header_ptr = c_header;
+		c_header = c_header->next;
 	}
 	
-	if ((!header->next->last) && header->next->free) {
-		header->next->next->prev = header;
-		header->next = header->next->next;
-	}
+	return false;
 }
 
 void Heap::print_headers() {
 	Header* c_header = (Header*)m_start_addr;
 	
+	Header* next_header_ptr = nullptr;
+	Header* prev_header_ptr = nullptr;
+	
 	while (!c_header->last) {
+		if (next_header_ptr != c_header && next_header_ptr)
+			out << "HEAP CORRUPTION DETECTED!\n";
+		if (prev_header_ptr != c_header->prev && prev_header_ptr)
+			out << "HEAP CORRUPTION DETECTED!\n";
+	
 		u32 c_size = (u64)c_header->next - (u64)c_header - sizeof(Header);
 		
 		if (c_header->free)
 			out << "FREE:\t 0x" << c_header << " size=" << (u64)c_size << "B next=" << c_header->next << " prev=" << c_header->prev << "\n";
 		else
 			out << "USED:\t 0x" << c_header << " size=" << (u64)c_size << "B next=" << c_header->next << " prev=" << c_header->prev << "\n";
+		
+		next_header_ptr = c_header->next;
+		prev_header_ptr = c_header;
 		c_header = c_header->next;
 	}
 }

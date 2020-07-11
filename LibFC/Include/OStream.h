@@ -54,6 +54,30 @@ public:
 		return *this;
 	}
 	
+	OStream& operator<<(i64 data) {
+		itoa((u64)data, convertion_buffer);
+		write(convertion_buffer, strlen(convertion_buffer));
+		return *this;
+	}
+	
+	OStream& operator<<(i32 data) {
+		itoa((u64)data, convertion_buffer);
+		write(convertion_buffer, strlen(convertion_buffer));
+		return *this;
+	}
+	
+	OStream& operator<<(i16 data) {
+		itoa((u64)data, convertion_buffer);
+		write(convertion_buffer, strlen(convertion_buffer));
+		return *this;
+	}
+	
+	OStream& operator<<(i8 data) {
+		itoa((u64)data, convertion_buffer);
+		write(convertion_buffer, strlen(convertion_buffer));
+		return *this;
+	}
+	
 private:
 	inline static char convertion_buffer[32];
 };

@@ -6,6 +6,8 @@
 #define PACKED __attribute__((packed))
 #define FORCE_INLINE __attribute__((always_inline))
 
+#define self *this
+
 typedef uint64_t u64;
 typedef uint32_t u32;
 typedef uint16_t u16;
@@ -31,10 +33,29 @@ typedef float f32;
 	inline void* realloc(void* addr, u32 bytes);
 #endif
 
+
+#define singleton(type, constructor)			\
+	public:										\
+		static type& get() {					\
+			if (!__inst)						\
+				__inst = new type();			\
+			return *__inst;						\
+		}										\
+		static void destroy() {						\
+			if (__inst) {						\
+				__inst->~type();						\
+				free(__inst);					\
+			}									\
+		}										\
+	private:									\
+		type() constructor						\
+		static inline type* __inst = nullptr;	\
+
+
 #include <Ptr.h>
 
 template<typename T, typename... Targs>
-T* create(const Targs&... args) {
+T& create(const Targs&... args) {
 	T* new_t = (T*)alloc(sizeof(T));
 	*new_t = T(args...);
 	return new_t;
@@ -44,4 +65,12 @@ template<typename T>
 void destroy(T& target) {
 	target.~T();
 	free(&target);
+}
+
+inline void* operator new(size_t size) {
+	return alloc(size);
+}
+
+inline void* operator new(size_t, void* ptr) {
+	return ptr;
 }

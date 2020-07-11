@@ -6,6 +6,8 @@
 
 using FC::OStream;
 
+#ifdef KERNEL
+
 class TTY : public OStream {
 public:
 	void write(const char* data, u32 size) override {
@@ -18,3 +20,9 @@ public:
 };
 
 inline TTY out;
+
+#else
+
+
+
+#endif

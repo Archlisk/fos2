@@ -10,6 +10,10 @@ struct Pair {
 	
 	Tf first;
 	Ts second;
+	
+	bool operator==(const Pair<Tf, Ts>& other) {
+		return (first == other.first) && (second == other.second);
+	}
 };
 
 }

@@ -24,6 +24,9 @@ void PIT::on_tick() {
 }
 
 void PIT::set_frequency(PIT::Channel channel, u32 freq_hz) {
+	if (!freq_hz)
+		return;
+	
 	u32 divisor = 1193180 / freq_hz;
 	
 	u16 data_port = PIT_DATA_CHANNEL0 + (u8)channel;

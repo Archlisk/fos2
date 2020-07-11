@@ -5,10 +5,10 @@
 namespace Kernel {
 namespace PIT {
 
-enum class Channel {
-	C0 = 0,
-	C1 = 1,
-	C2 = 2
+enum Channel {
+	CH0 = 0,
+	CH1 = 1,
+	CH2 = 2
 };
 
 void on_tick();

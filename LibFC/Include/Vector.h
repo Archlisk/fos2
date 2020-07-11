@@ -1,6 +1,9 @@
 #pragma once
 
 #include <Memory.h>
+#include <InitList.h>
+
+#include <TTY.h>
 
 namespace FC {
 
@@ -8,10 +11,14 @@ template<typename T>
 class Vector {
 public:
 	Vector() {}
+	Vector(const InitList<T>& list) {
+		for (const T& elem : list)
+			push(elem);
+	}
+	
 	~Vector() { clear(); }
 	
-	template<typename... Targs>
-	void push(const Targs&... args) {
+	void push(const T& other) {
 		m_elems += 1;
 
 		if (m_alloc_bytes < m_elems	* sizeof(T)) {
@@ -19,7 +26,19 @@ public:
 			m_data = (T*)realloc(m_data, m_alloc_bytes);
 		}
 		
-		m_data[m_elems - 1] = T(args...);
+		new (&m_data[m_elems - 1]) T(other);
+	}
+	
+	template<typename... Targs>
+	void emplace(const Targs&... args) {
+		m_elems += 1;
+
+		if (m_alloc_bytes < m_elems	* sizeof(T)) {
+			m_alloc_bytes = m_elems * 2 * sizeof(T);
+			m_data = (T*)realloc(m_data, m_alloc_bytes);
+		}
+		
+		new (&m_data[m_elems - 1]) T(args...);
 	}
 	
 	void insert(u32 index, const T& val) {
@@ -31,6 +50,7 @@ public:
 		}
 		
 		Memory::copy(&m_data[index + 1], &m_data[index], (m_elems - index) * sizeof(T));
+		Memory::set(&m_data[index], 0, sizeof(T));
 		m_data[index] = val;
 	}
 	
@@ -51,8 +71,8 @@ public:
 	}
 	
 	void clear() {
-		for (u32 i = 0; i < m_elems; i++)
-			m_data[i].~T();
+		for (T& elem : self)
+			elem.~T();
 		
 		free(m_data);
 		m_data = nullptr;
@@ -65,19 +85,27 @@ public:
 		m_data = (T*)realloc(m_data, m_alloc_bytes);
 	}
 	
+	T& top() { return m_data[m_elems - 1]; }
+	
 	u32 size() { return m_elems; }
 	
 	T* begin() { return m_data; }
 	T* end() { return (T*)((u8*)m_data + m_elems * sizeof(T)); }
 	
 	FORCE_INLINE T& operator[](u32 index) { return m_data[index]; }
+	
+	
+	const T& top() const { return m_data[m_elems - 1]; }
+	
+	const T* begin() const { return m_data; }
+	const T* end() const { return (T*)((u8*)m_data + m_elems * sizeof(T)); }
+	
+	FORCE_INLINE const T& operator[](u32 index) const { return m_data[index]; }
 
 private:
-	u64 a, b, c, d, e, f, g;
 	T* m_data = nullptr;
 	u32 m_elems = 0;
 	u32 m_alloc_bytes = 0;
-	u64 a1, b2, c3, d5, e6, f7, g8;
 };
 
 }

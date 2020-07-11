@@ -1,9 +1,13 @@
 #pragma once
 
 namespace Kernel {
+
 class ACPI {
+	singleton(ACPI, ;);
+	
 public:
-	struct GenericAddress {
+
+	struct PACKED GenericAddress {
 		u8 address_space;
 		u8 bit_width;
 		u8 bit_offset;
@@ -134,15 +138,12 @@ public:
 		
 		MCFGDevice devices[];
 	};
-	
-	ACPI();
-
-	void* find_sdt_table(const char* table_name);
 
 	inline u8 pcie_supported() { return m_mcfg != 0; }
 
 private:
 	RSDP* find_rsdp();
+	void* find_sdt_table(const char* table_name);
 	
 	u8 m_revision = 0;
 	

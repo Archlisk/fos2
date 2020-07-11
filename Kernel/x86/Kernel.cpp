@@ -14,10 +14,7 @@
 #include <Paging.h>
 #include <Interrupts.h>
 #include <CPUID.h>
-
-#include <String.h>
-#include <Memory.h>
-#include <Vector.h>
+#include <TTY.h>
 
 #define HEAP_ADDR ((void*)(PAGE_SIZE * 4))
 
@@ -29,43 +26,32 @@ extern "C" Paging::PageDir kernel_page_dir;
 Terminal KernelData::tty(nullptr, 0, 0);
 Heap KernelData::heap(nullptr, 0);
 
-void kernel_main() {
-//	for (u16 bus = 0; bus < PCI_MAX_BUS; bus++)
-//		for (u8 device = 0; device < PCI_MAX_DEVICE; device++)
-//			for (u8 func = 0; func < PCI_MAX_FUNC; func++) {
-//				u16 res = PCI::read_w(bus, device, func, 0x00);
-//				if (res != 0xFFFF) {
-//					res = PCI::read_w(bus, device, func, 0x0A);
-//					out << "PCI " << bus << ":" << device << ":" << func << " 0x" << (void*)res << " '"
-//						<< PCI::class_str(res) << "'\n";
-//				}
-//			}
-	
-	Vector<String> vec;
-	vec.push(String("Fuck"));
-	vec.push(String(" Bit"));
-	vec.push(String("ch\n"));
-	vec.insert(1, String(" You"));
-	
-	for (String& str : vec)
-		out << str;
-	
-	KernelData::tty.set_color(VGA::FGColor4B::LightGreen);
-	out << "Initialization complete!\n";
-	KernelData::tty.set_color(VGA::FGColor4B::BrightWhite);
-}
-
 extern "C"
 void enter() {
+	// Heap
 	KernelData::heap = Heap(HEAP_ADDR, PAGE_SIZE);
-	KernelData::tty = Terminal((u16*)0xB8000, 80, 25);
 	
+	// TTY
+	KernelData::tty = Terminal((u16*)0xB8000, 80, 25);
 	KernelData::tty.set_color(VGA::FGColor4B::BrightWhite);
 
-	kernel_page_dir.unmap_all();	// Zero all entries to remove any garbage
+	// SSE
+	CPU::CPUInfo* cpu_info = CPU::info();
+	if (!(cpu_info->sse || cpu_info->sse2 || cpu_info->sse3 || cpu_info->sse4_1 || cpu_info->sse4_2)) {
+		KernelData::tty.set_color(VGA::FGColor4B::LightRed);
+		out << "This CPU does not support SSE. FOS2 cannot run without this feature.\n";
+		while (true)
+			ASM::hlt();
+	}
+	CPU::enable_sse();
+
+
+	// Paging
+	kernel_page_dir.unmap_all();		// Zero all entries to remove any garbage
 	kernel_page_dir.identity_map_all();
 	Paging::enable(kernel_page_dir);
 	
+	// GDT
 	GDT::Entry gdt[3] = {
 		GDT::Entry(0, 0, GDT::Entry::AccessByte(1)),
 		GDT::Entry(0, 0xFFFFFFFF, GDT::Entry::AccessByte(0b10011010)),
@@ -74,21 +60,39 @@ void enter() {
 	
 	GDT::load(gdt, sizeof(gdt));
 	
+	// Interrupts
 	PIC::remap(0x20, 0x28);
-	
 	IDT idt;
 	IDT::load(&idt);
-	
 	Interrupts::register_all(idt, 0x8);
-	
 	ASM::sti();
 	
-	PIT::set_frequency(PIT::Channel::C0, 1000);
-	
+	// PIT
+	PIT::set_frequency(PIT::CH0, 1000);
 	out << "CPU\t: " << CPU::brand_str() << '\n';
 	
-	ACPI acpi;
+	// ACPI
+	ACPI& acpi = ACPI::get();
 	
-	kernel_main();
+	// PCI
+	PCI& pci = PCI::get();
+	for (PCI::Device elem : pci.devices())
+		out << "PCI Device: " << elem.class_str << '\n';
+	out << '\n';
+	
+	// Initialization completed!
+	KernelData::tty.set_color(VGA::FGColor4B::LightGreen);
+	out << "Initialization complete!\n";
+	KernelData::tty.set_color(VGA::FGColor4B::BrightWhite);
+	
+	while (PIT::time() < 10000) {
+		PCSpeaker::play(PIT::time() & 0b11111111101);
+	}
+	PCSpeaker::stop();
+	
+	// Cleanup
+	PCI::destroy();
+	ACPI::destroy();
+	
 	KernelData::heap.print_headers();
 }

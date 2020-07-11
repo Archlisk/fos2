@@ -17,4 +17,13 @@ T min(T v1, T v2) {
 	return (v1 < v2) ? v1 : v2;
 }
 
+template<typename T>
+T clamp(T val, T max, T min) {
+	if (val > max)
+		return max;
+	if (val < min)
+		return min;
+	return val;
+}
+
 }

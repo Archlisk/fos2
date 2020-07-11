@@ -125,45 +125,45 @@ extern "C" void secondary_ata_isr();// 47
 
 
 inline void register_all(IDT& idt, u16 selector) {
-	idt.entries[0] = IDT::Entry((u64)divide_by_zero_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[1] = IDT::Entry((u64)debug_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[2] = IDT::Entry((u64)non_maskable_interrupt_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[3] = IDT::Entry((u64)breakpoint_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[4] = IDT::Entry((u64)overflow_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[5] = IDT::Entry((u64)bound_range_exceeded_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[6] = IDT::Entry((u64)invalid_opcode_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[7] = IDT::Entry((u64)device_not_available_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[8] = IDT::Entry((u64)double_fault_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[9] = IDT::Entry((u64)coprocessor_segment_overrun_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[10] = IDT::Entry((u64)invalid_tss_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[11] = IDT::Entry((u64)segment_not_present_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[12] = IDT::Entry((u64)stack_segment_fault_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[13] = IDT::Entry((u64)general_protection_fault_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[14] = IDT::Entry((u64)page_fault_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[16] = IDT::Entry((u64)x87_float_exception_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[17] = IDT::Entry((u64)alignment_check_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[18] = IDT::Entry((u64)machine_check_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[19] = IDT::Entry((u64)simd_float_exception_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[20] = IDT::Entry((u64)virtualization_exception_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[31] = IDT::Entry((u64)security_exception_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[0]	= IDT::Entry((u64)divide_by_zero_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[1]	= IDT::Entry((u64)debug_isr_asm,						selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[2]	= IDT::Entry((u64)non_maskable_interrupt_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[3]	= IDT::Entry((u64)breakpoint_isr_asm,					selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[4]	= IDT::Entry((u64)overflow_isr_asm,						selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[5]	= IDT::Entry((u64)bound_range_exceeded_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[6]	= IDT::Entry((u64)invalid_opcode_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[7]	= IDT::Entry((u64)device_not_available_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[8]	= IDT::Entry((u64)double_fault_isr_asm,					selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[9]	= IDT::Entry((u64)coprocessor_segment_overrun_isr_asm,	selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[10] = IDT::Entry((u64)invalid_tss_isr_asm,					selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[11] = IDT::Entry((u64)segment_not_present_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[12] = IDT::Entry((u64)stack_segment_fault_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[13] = IDT::Entry((u64)general_protection_fault_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[14] = IDT::Entry((u64)page_fault_isr_asm,					selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[16] = IDT::Entry((u64)x87_float_exception_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[17] = IDT::Entry((u64)alignment_check_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[18] = IDT::Entry((u64)machine_check_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[19] = IDT::Entry((u64)simd_float_exception_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[20] = IDT::Entry((u64)virtualization_exception_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[31] = IDT::Entry((u64)security_exception_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
 	
-	idt.entries[IRQ_PIT] = IDT::Entry((u64)pit_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_PS2_KEYBOARD] = IDT::Entry((u64)ps2_keyboard_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_CASCADE] = IDT::Entry((u64)cascade_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_COM2] = IDT::Entry((u64)com2_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_COM1] = IDT::Entry((u64)com1_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_LPT2] = IDT::Entry((u64)lpt2_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_FLOPPY] = IDT::Entry((u64)floppy_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_LPT1] = IDT::Entry((u64)lpt1_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_PIT]			= IDT::Entry((u64)pit_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_PS2_KEYBOARD]	= IDT::Entry((u64)ps2_keyboard_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_CASCADE]		= IDT::Entry((u64)cascade_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_COM2]			= IDT::Entry((u64)com2_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_COM1]			= IDT::Entry((u64)com1_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_LPT2]			= IDT::Entry((u64)lpt2_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_FLOPPY]			= IDT::Entry((u64)floppy_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_LPT1]			= IDT::Entry((u64)lpt1_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
 	
-	idt.entries[IRQ_CMOS_CLOCK] = IDT::Entry((u64)cmos_clock_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_LEGACY_SCSI] = IDT::Entry((u64)legacy_scsi_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_SCSI2] = IDT::Entry((u64)scsi2_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_SCSI1] = IDT::Entry((u64)scsi1_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_PS2_MOUSE] = IDT::Entry((u64)ps2_mouse_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_FPU] = IDT::Entry((u64)fpu_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_PRIMARY_ATA] = IDT::Entry((u64)primary_ata_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
-	idt.entries[IRQ_SECONDARY_ATA] = IDT::Entry((u64)secondary_ata_isr_asm, selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_CMOS_CLOCK]		= IDT::Entry((u64)cmos_clock_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_LEGACY_SCSI]	= IDT::Entry((u64)legacy_scsi_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_SCSI2]			= IDT::Entry((u64)scsi2_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_SCSI1]			= IDT::Entry((u64)scsi1_isr_asm,			selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_PS2_MOUSE]		= IDT::Entry((u64)ps2_mouse_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_FPU]			= IDT::Entry((u64)fpu_isr_asm,				selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_PRIMARY_ATA]	= IDT::Entry((u64)primary_ata_isr_asm,		selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
+	idt.entries[IRQ_SECONDARY_ATA]	= IDT::Entry((u64)secondary_ata_isr_asm,	selector, IDT::Entry::Attributes(IDT_INTERRUPT_GATE, 3));
 }
 
 }

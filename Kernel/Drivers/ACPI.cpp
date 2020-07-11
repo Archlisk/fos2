@@ -7,6 +7,7 @@
 using namespace FC;
 using namespace Kernel;
 
+
 inline u8 verify(void* table, u32 size) {
 	u8 sum = 0;
 	for (u32 i = 0; i < size; i++)
@@ -66,20 +67,23 @@ ACPI::ACPI() {
 		
 	if (m_fadt && !verify(&m_fadt->header))
 		out << "FADT Checksum is invalid!\n";
+	else
+		out << "FADT Address: 0x" << m_fadt << '\n';
 		
 	m_mcfg = (MCFG*)find_sdt_table("MCFG");
 	
 	if (!m_mcfg)
-		out << "PCIe is not supported!\n";
+		out << "PCI-Express is not supported\n";
 	
 	if (m_mcfg && !verify(&m_mcfg->header))
 		out << "MCFG Checksum is invalid!\n";
 		
 	if (pcie_supported()) {
+		out << "MCFG Address: 0x" << m_mcfg << '\n';
 		u32 entries = (m_mcfg->header.length - sizeof(MCFG)) / sizeof(MCFGDevice);
 		for (u32 i = 0; i < entries; i++) {
 			MCFGDevice* device = &m_mcfg->devices[i];
-			out << "MCFG Device: " << device << "\n";
+			out << "PCI-E Device found at: 0x" << device << "\n";
 		}
 	}
 }
@@ -101,8 +105,6 @@ void* ACPI::find_sdt_table(const char* table_name) {
 				return (void*)m_xsdt->sdts[i];
 		}
 	}
-	
-	out << "Failed to find " << table_name << " in SDT\n";
 	return nullptr;
 }
 
