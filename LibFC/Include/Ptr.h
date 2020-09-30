@@ -14,14 +14,12 @@ public:
 	~Ptr() { dealloc(); }
 	
 	Ptr<T>& operator=(T* data) {
-		if (m_data)
-			free(m_data);
+		dealloc(m_data);
 		m_data = data;
 		return *this;
 	}
 	
 	T* operator->() const { return m_data; }
-	T* operator&() const { return m_data; }
 	T& operator*() { return *m_data; }
 	
 	T* get() const { return m_data; }
@@ -29,7 +27,7 @@ public:
 	
 	void dealloc() {
 		if (m_data)
-			free<T>(m_data);
+			destroy(m_data);
 		m_data = nullptr;
 	}
 	

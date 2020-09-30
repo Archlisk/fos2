@@ -1,6 +1,7 @@
 BIN = ./bin
 
 DIRS += \
+	Bootloader \
 	Kernel \
 	Tools
 
@@ -12,13 +13,16 @@ all:
 	fi
 	
 	-@mkdir Bin
-	@mkdir -p Bin/isodir/boot/grub
-	@cp Bin/Kernel.bin Bin/isodir/boot/
-	@cp Bin/grub.cfg Bin/isodir/boot/grub
-	@grub-mkrescue -o fos2.iso Bin/isodir
+	-@mkdir Bin/fsdir
+	@cp Bin/Kernel.bin Bin/fsdir/System/Kernel.bin
+	@cp Bin/Stage2.bin Bin/fsdir/System/Stage2.bin
+	
+	-@rm fos2.img
+	-@touch fos2.img
+	Bin/mkfsimg -o fos2.img -b Bin/Bootloader.bin Bin/fsdir/*
 
 run: all
-	@qemu-system-i386 -cdrom fos2.iso -soundhw pcspk
+	@qemu-system-i386 -drive format=raw,file=fos2.img -soundhw pcspk
 	
 clean:
 	-rm -rf Bin/isodir Bin/Kernel.bin

@@ -13,25 +13,14 @@ inline char* strrev(char* str) {
 	i16 i, j;
 	u8 a;
 	u32 len = strlen(str);
-	
+
 	for (i = 0, j = len - 1; i < j; i++, j--) {
 		a = str[i];
 		str[i] = str[j];
 		str[j] = a;
 	}
-	
-	return str;
-}
 
-inline u8 streq(const char* str1, const char* str2) {
-	for (int i ; ; i++) {
-		if (str1[i] != str2[i])
-			return false;
-		
-		if (str1[i] == 0 || str2[i] == 0)
-			break;
-	}
-	return true;
+	return str;
 }
 
 inline char* utoa(u64 num, char* str) {
@@ -42,30 +31,6 @@ inline char* utoa(u64 num, char* str) {
 		num /= 10;
 	}
 	str[c++] = num + '0';
-	str[c] = 0;
-
-	strrev(str);
-
-	return str;
-}
-
-inline char* itoa(i64 num, char* str) {
-	u16 c = 0;
-	
-	u8 negative = 0;
-	
-	if (num < 0) {
-		negative = true;
-		num = -num;
-	}
-
-	while (num >= 10) {
-		str[c++] = num % 10 + '0';
-		num /= 10;
-	}
-	str[c++] = num + '0';
-	if (negative)
-		str[c++] = '-';
 	str[c] = 0;
 
 	strrev(str);

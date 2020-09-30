@@ -1,7 +1,7 @@
 #include <Memory.h>
 #include <Math.h>
 
-// TODO: These funtions will be buggy if the distance between src and dst is less than 8 bytes
+// TODO: These funtions might be buggy if the distance between src and dst is less than 8 bytes
 
 inline void* copy_rev(void* dst, const void* src, u32 bytes) {
 	void* start_dst = dst;

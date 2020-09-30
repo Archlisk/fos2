@@ -6,7 +6,7 @@
 #define PACKED __attribute__((packed))
 #define FORCE_INLINE __attribute__((always_inline))
 
-#define self *this
+#define self (*this)
 
 typedef uint64_t u64;
 typedef uint32_t u32;
@@ -41,15 +41,19 @@ typedef float f32;
 				__inst = new type();			\
 			return *__inst;						\
 		}										\
-		static void destroy() {						\
+		static void destroy() {					\
 			if (__inst) {						\
-				__inst->~type();						\
+				__inst->~type();				\
 				free(__inst);					\
 			}									\
 		}										\
+		type(type const&) = delete;				\
+		type(type&&) = delete;					\
+		type& operator=(type const&) = delete;	\
+		type& operator=(type &&) = delete;		\
 	private:									\
 		type() constructor						\
-		static inline type* __inst = nullptr;	\
+		static inline type* __inst = nullptr;
 
 
 #include <Ptr.h>

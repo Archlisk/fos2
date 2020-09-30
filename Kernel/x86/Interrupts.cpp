@@ -15,6 +15,12 @@ void pit_isr() {
 
 extern "C" 
 void ps2_keyboard_isr() {
+	
+	VGA::FGColor4B color = (VGA::FGColor4B)KernelData::tty.get_color();
+	KernelData::tty.set_color(VGA::FGColor4B::Yellow);
+	out << "Int 1: PS/2 Keyboard\n";
+	KernelData::tty.set_color(color);
+	
 	IO::read_b(0x60);
 	PIC::eoi(1);
 }

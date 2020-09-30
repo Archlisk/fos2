@@ -16,6 +16,15 @@ public:
 			push(elem);
 	}
 	
+	Vector(const Vector<T>& other) {
+		m_elems = other.size();
+		m_alloc_bytes = m_elems * sizeof(T);
+		m_data = alloc(m_alloc_bytes);
+		
+		for (u32 i = 0; i < m_elems; i++)
+			new (&m_data[i]) T(other.data()[i]);
+	}
+	
 	~Vector() { clear(); }
 	
 	void push(const T& other) {
@@ -26,7 +35,7 @@ public:
 			m_data = (T*)realloc(m_data, m_alloc_bytes);
 		}
 		
-		new (&m_data[m_elems - 1]) T(other);
+		m_data[m_elems - 1] = other;
 	}
 	
 	template<typename... Targs>
@@ -88,6 +97,7 @@ public:
 	T& top() { return m_data[m_elems - 1]; }
 	
 	u32 size() { return m_elems; }
+	T* data() { return m_data; }
 	
 	T* begin() { return m_data; }
 	T* end() { return (T*)((u8*)m_data + m_elems * sizeof(T)); }

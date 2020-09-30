@@ -4,7 +4,7 @@ all: dirs
 
 dirs: $(DIRS)
 $(DIRS):
-	@flock $@ $(MAKE) -C $@
+	@flock $@ $(MAKE) -C $@ all
 
 clean: $(DIRS_CLEAN)
 $(DIRS_CLEAN): %.clean:

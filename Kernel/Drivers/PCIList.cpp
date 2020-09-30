@@ -4,10 +4,7 @@
 
 using namespace Kernel;
 
-const char* PCI::class_str(u16 class_info) {
-	u8 class_code = (u16)class_info >> 8;
-	u8 subclass = (u16)class_info;
-
+const char* PCI::class_str(u8 class_code, u8 subclass, u8 prog_if) {
 	switch (class_code) {
 		case 0x00:
 			switch (subclass) {

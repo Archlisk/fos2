@@ -18,6 +18,8 @@ public:
 	inline void set_color(VGA::BGColor4B bg) { m_color &= 0x0F; m_color |= (u8)bg; }
 	
 	inline u8 get_color() const { return m_color; }
+	
+	void clear();
 
 private:
 	u16* m_data;

@@ -1,4 +1,4 @@
-
+[BITS 32]
 MBALIGN		equ 	1 << 0
 MEMINFO 	equ 	1 << 1
 FLAGS 		equ	MBALIGN | MEMINFO
@@ -27,7 +27,7 @@ SECTION .text
 	global _start
 	_start:
 		mov esp, stack_top
-	
+
 		extern enter
 		call enter
 		

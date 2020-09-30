@@ -75,6 +75,14 @@ public:
 		return new_str;
     }
     
+    u8 operator==(const String& other) {
+		return streq(m_data, other.data());
+    }
+    
+	u8 operator==(const char* other) {
+		return streq(m_data, other);
+    }
+    
     char* data() const { return m_data; }
     u32 size() const { return m_size; }
     

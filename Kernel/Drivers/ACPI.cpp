@@ -72,9 +72,6 @@ ACPI::ACPI() {
 		
 	m_mcfg = (MCFG*)find_sdt_table("MCFG");
 	
-	if (!m_mcfg)
-		out << "PCI-Express is not supported\n";
-	
 	if (m_mcfg && !verify(&m_mcfg->header))
 		out << "MCFG Checksum is invalid!\n";
 		

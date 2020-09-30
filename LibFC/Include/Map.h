@@ -50,23 +50,8 @@ public:
 	}
 
 	u32 find_index(const Tk& key) {
-		f32 diff = (f32)size();
-		f32 index = ((f32)size() / 2.0f) + 1.0f;
-		
-		while ((diff /= 2.0f) > 0.5f) {
-			u32 i = (i32)index;
-		
-			if (m_data[i].first < key)
-				index += diff;
-			else if (m_data[i].first == key)
-				return i;
-			else
-				index -= diff;
-			index = clamp<f32>((f32)index, size() - 1, 0);
-		}
-		
-		if (m_data[(i32)index].first >= key)
-			return (i32)index;
+	
+		// TODO: Write the actual fucking algorithm
 			
 		return MAP_INDEX_NOT_FOUND;
 	}

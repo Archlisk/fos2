@@ -34,7 +34,9 @@ AUTO_INCLUDE += \
 		LibFC/Include/FC.h
 
 ASM_FLAGS += -felf32
-CPP_FLAGS += -ffreestanding -fno-exceptions -fno-rtti -Wall -Wextra -Wno-pointer-arith -m32 -std=c++20 -D KERNEL
-LNK_FLAGS += -T linker.ld -nostdlib -m32 -lgcc
+CPP_FLAGS += -ffreestanding -fno-exceptions -fno-rtti -fno-pie -Wall -Wextra -Wno-pointer-arith -m32 -std=c++20 -D KERNEL
+LNK_FLAGS += -T linker.ld -nostdlib -m32
+
+LNK_LIBS += -lgcc
 
 include ../Makefile.common	

@@ -6,8 +6,6 @@
 
 using namespace Kernel;
 
-#include <Drivers/PIT.h>
-
 u32 Terminal::write_str(const char* str, u32 len) {
 	for (u32 i = 0; i < len; i++)
 		write_char(str[i]);
@@ -50,4 +48,8 @@ char Terminal::write_char(char symbol) {
     }
 	
 	return symbol;
+}
+
+void Terminal::clear() {
+	FC::Memory::set(m_data, 0, m_width * m_height * 2);
 }

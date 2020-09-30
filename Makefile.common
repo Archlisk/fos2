@@ -3,6 +3,9 @@ BASE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 
 CROSSCOMP_PATH = $(BASE_DIR)/Tools/cross-bin/bin
 
+CXX = g++
+LNK = g++
+
 ifndef CXX
 CXX = $(CROSSCOMP_PATH)/i686-elf-g++
 endif
@@ -17,7 +20,7 @@ CPP_FLAGS += -masm=intel
 ASM_FLAGS +=
 LNK_FLAGS +=
 
-LNK_LIBS += -lgcc
+LNK_LIBS +=
 
 INCLUDE_FLAGS = $(foreach path,$(INCLUDE_DIRS),\
 			-I$(BASE_DIR)/$(path))
@@ -30,6 +33,7 @@ OBJECTS_ASM = $(patsubst %.asm,%.o,$(SOURCES_ASM))
 OBJECTS = $(OBJECTS_CPP) $(OBJECTS_ASM)
 
 CPP_DEPS = $(patsubst %.o,%.d,$(OBJECTS_CPP))
+ASM_DEPS = $(patsubst %.o,%.d,$(OBJECTS_ASM))
 
 ifdef OUT
 OUT_PATH = $(BASE_DIR)/Bin/$(OUT)
@@ -48,6 +52,7 @@ endif
 all: $(OUT_PATH)
 
 -include $(CPP_DEPS)
+-include $(ASM_DEPS)
 
 %.o: %.cpp
 	@echo Compiling $<...
@@ -56,8 +61,9 @@ all: $(OUT_PATH)
 
 %.o: %.asm
 	@echo Compiling $<...
+	@$(ASM) $(ASM_FLAGS) -M -MT $@ -MF $(patsubst %.o,%.d,$@) $<
 	@$(ASM) $(ASM_FLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
-	-rm $(OBJECTS) $(CPP_DEPS)
+	-rm $(OBJECTS) $(CPP_DEPS) $(ASM_DEPS)

@@ -9,13 +9,10 @@ FC::Vector<PCI::Device>& PCI::enumerate() {
 		for (u8 device = 0; device < PCI_MAX_DEVICE; device++) {
 			for (u8 func = 0; func < PCI_MAX_FUNC; func++) {
 			
-				u16 res = PCI::read_d(bus, device, func, 0x00);
+				u16 res = PCI::read_reg(bus, device, func, 0x00);
 				
-				if (res != 0xFFFF) {
-					res = PCI::read_d(bus, device, func, 0x0A);
-					m_devices.push({ (u8)bus, device, func, FC::String(PCI::class_str(res)) });
-				}
-				
+				if (res != 0xFFFF)
+					m_devices.push(Device(bus, device, func));
 			}
 		}
 	}
